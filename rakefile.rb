@@ -94,6 +94,7 @@ rule(/titles\/.*\.png$/ => [
   'titles',
 ]) do |t|
   title_txt = File.open(t.source, 'r') {|f| f.read }.strip
+  title_txt = ' ' if title_txt =~ /^$/
   sh <<-_EOS
   convert -background white -font '/Library/Fonts/ヒラギノ丸ゴ ProN W4.otf' -size 180x20 -gravity center caption:'#{title_txt}' #{t.name}
   _EOS
