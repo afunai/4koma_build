@@ -84,9 +84,9 @@ rule(/titles\/.*\.txt$/ => [
 ]) do |t|
   t.name =~ /(\d+)_(\d+)\./
   serial = ($1.to_i - 1) * 8 + $2.to_i + 1
-  sh <<-_EOS
-  head -#{serial} src/titles.txt | tail -1 > #{t.name}
-  _EOS
+  new_title = `head -#{serial} src/titles.txt | tail -1`
+  old_title = File.open(t.name, 'r') {|f| f.read } rescue ''
+  File.open(t.name, 'w') {|f| f.puts new_title } if new_title != old_title
 end
 
 rule(/titles\/.*\.png$/ => [
