@@ -41,7 +41,7 @@ end
 
 def s1_name_of(page)
   sprintf(
-    'strips/k_%02d_%02d.png',
+    'strips/kaerimichi_%02d_%02d.png',
     episode_number_of(page),
     right_strip_number_of(page),
   )
@@ -49,7 +49,7 @@ end
 
 def s2_name_of(page)
   sprintf(
-    'strips/k_%02d_%02d.png',
+    'strips/kaerimichi_%02d_%02d.png',
     episode_number_of(page),
     left_strip_number_of(page),
   )
@@ -66,7 +66,7 @@ directory 'src'
 
 file 'src/paper.png' =>['src'] do |t|
   sh <<-_EOS
-  convert -size 480x640 xc:white -fill none -stroke blue -strokewidth 1 -draw "rectangle 10,10 470,630" src/paper.png
+  convert -size 4299x6071 xc:white src/paper.png
   _EOS
 end
 
@@ -96,7 +96,7 @@ rule(/titles\/.*\.png$/ => [
   title_txt = File.open(t.source, 'r') {|f| f.read }.strip
   title_txt = ' ' if title_txt =~ /^$/
   sh <<-_EOS
-  convert -background white -font '/Library/Fonts/ヒラギノ丸ゴ ProN W4.otf' -size 180x20 -gravity center caption:'#{title_txt}' #{t.name}
+  convert -background none -font '/Library/Fonts/ヒラギノ丸ゴ ProN W4.otf' -size 1480x200 -pointsize 150 -gravity center caption:'#{title_txt}' #{t.name}
   _EOS
 end
 
@@ -104,7 +104,7 @@ directory 'strips'
 
 rule(/strips\/.*\.png$/ => ['strips']) do |t|
   sh <<-_EOS
-  convert -size 2x5 xc: +noise Random -scale 10000% #{t.name}
+  convert -size 1880x5464 xc:white #{t.name}
   _EOS
 end
 
@@ -112,7 +112,7 @@ directory 'nombres'
 
 rule(/nombres\/.*\.png$/ => ['nombres']) do |t|
   sh <<-_EOS
-  convert -background white -font '/Library/Fonts/ヒラギノ丸ゴ ProN W4.otf' -size 100x15 -gravity center caption:'#{nombre_of t.name}' #{t.name}
+  convert -background none -font '/Library/Fonts/ヒラギノ丸ゴ ProN W4.otf' -size 300x100 -gravity center caption:'#{nombre_of t.name}' #{t.name}
   _EOS
 end
 
@@ -129,14 +129,14 @@ rule(/^build\/p\d+\.png$/ => [
 ]) do |t|
   composite_right_title = right_strip_number_of(t.name) == 0 ?
     '' :
-    "#{t.sources[0]} -geometry +260+30 -composite"
+    "#{t.sources[0]} -geometry +2339+270 -composite"
   sh <<-_EOS
   convert src/paper.png \
+    #{t.sources[2]} -geometry +2139+371 -composite \
+    #{t.sources[3]} -geometry +284+371 -composite \
     #{composite_right_title} \
-    #{t.sources[1]} -geometry +40+30 -composite \
-    #{t.sources[2]} -geometry +250+60 -composite \
-    #{t.sources[3]} -geometry +30+60 -composite \
-    #{t.sources[4]} -gravity South -geometry +0+40 -composite \
+    #{t.sources[1]} -geometry +484+270 -composite \
+    #{t.sources[4]} -gravity South -geometry +0+170 -composite \
     #{t.name}
   _EOS
 end
