@@ -104,7 +104,7 @@ directory 'strips'
 
 rule(/strips\/.*\.png$/ => ['strips']) do |t|
   sh <<-_EOS
-  convert -size 1880x5464 xc:white #{t.name}
+  convert -size 1880x5464 xc:none #{t.name}
   _EOS
 end
 
