@@ -159,14 +159,14 @@ rule(/^build\/p\d+\.png$/ => [
 ]) do |t|
   composite_right_title = right_strip_number_of(t.name) == 0 ?
     '' :
-    "#{t.sources[0]} -geometry +2339+270 -composite"
+    "#{t.sources[0]} -geometry +2339+210 -composite"
   sh <<-_EOS
   convert src/base.png \
-    #{t.sources[2]} -geometry +2139+371 -composite \
-    #{t.sources[3]} -geometry +284+371 -composite \
+    #{t.sources[2]} -geometry +2139+311 -composite \
+    #{t.sources[3]} -geometry +284+311 -composite \
     #{composite_right_title} \
-    #{t.sources[1]} -geometry +484+270 -composite \
-    #{t.sources[4]} -gravity South -geometry +0+120 -composite \
+    #{t.sources[1]} -geometry +484+210 -composite \
+    #{t.sources[4]} -gravity South -geometry +0+180 -composite \
     -resize 3390x -crop 3295x4724+0+10 \
     #{t.name}
   _EOS
