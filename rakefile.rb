@@ -141,6 +141,7 @@ rule(/^build\/p\d+\.png$/ => [
     #{composite_right_title} \
     #{t.sources[1]} -geometry +484+270 -composite \
     #{t.sources[4]} -gravity South -geometry +0+170 -composite \
+    -resize 3390x -crop 3390x4724+0+10 \
     #{t.name}
   _EOS
 end
