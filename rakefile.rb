@@ -100,7 +100,7 @@ rule(/titles\/.*\.png$/ => [
   title_txt = File.open(t.source, 'r') {|f| f.read }.strip
   title_txt = ' ' if title_txt =~ /^$/
   sh <<-_EOS
-  convert -background none -font '/Library/Fonts/ヒラギノ丸ゴ ProN W4.otf' -size 1480x200 -pointsize 150 -gravity center caption:'#{title_txt}' #{t.name}
+  convert -background none -font './fonts/rounded-mgenplus-1c-medium.ttf' -size 1480x200 -gravity center caption:'#{title_txt}' #{t.name}
   _EOS
 end
 
