@@ -81,9 +81,9 @@ end
 
 directory 'src'
 
-file 'src/paper.png' =>['src'] do |t|
+file 'src/base.png' =>['src'] do |t|
   sh <<-_EOS
-  convert -size 4299x6071 xc:white src/paper.png
+  convert -size 4299x6071 xc:white src/base.png
   _EOS
 end
 
@@ -148,13 +148,13 @@ rule(/^build\/p\d+\.png$/ => [
   proc {|page| s2_name_of page },
   proc {|page| nombre_name_of page },
   'build',
-  'src/paper.png',
+  'src/base.png',
 ]) do |t|
   composite_right_title = right_strip_number_of(t.name) == 0 ?
     '' :
     "#{t.sources[0]} -geometry +2339+270 -composite"
   sh <<-_EOS
-  convert src/paper.png \
+  convert src/base.png \
     #{t.sources[2]} -geometry +2139+371 -composite \
     #{t.sources[3]} -geometry +284+371 -composite \
     #{composite_right_title} \
