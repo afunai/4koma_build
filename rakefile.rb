@@ -145,7 +145,7 @@ directory 'build'
 CONVERT_RESIZE = "-resize #{3295 + 118 * 2}x -crop 3295x4724+0+130"
 
 special_pages.each do |src|
-  file ('build/p%03d.png' % nombre_of(src)) => [src] do |t|
+  file ('build/p%03d.png' % nombre_of(src)) => [nombre_name_of(src), src] do |t|
     sh <<-_EOS
     convert #{src} \
       #{CONVERT_RESIZE} \
