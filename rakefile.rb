@@ -1,3 +1,10 @@
+require 'rake/clean'
+
+CLEAN.include FileList.new('titles/t_*.txt')
+CLEAN.include FileList.new('titles/t_*.png')
+CLEAN.include FileList.new('nombres/n_*.png')
+CLOBBER.include FileList.new('build/*')
+
 task default: :all
 
 task :all, [:last_page] do |t, args|
