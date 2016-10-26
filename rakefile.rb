@@ -7,6 +7,10 @@ task :all, [:last_page] do |t, args|
   end
 end
 
+task :pdf do |t|
+  sh 'convert -page a5 -define pdf:page-direction=right-to-left build/p*.png build/pages.pdf'
+end
+
 def nombre_of(page)
   page.match(/(\d+)\.png$/).to_a[1].to_i
 end
