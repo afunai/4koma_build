@@ -136,7 +136,7 @@ directory 'nombres'
 
 rule(/nombres\/.*\.png$/ => ['nombres']) do |t|
   sh <<-_EOS
-  convert -background none -font '/Library/Fonts/ヒラギノ丸ゴ ProN W4.otf' -size 300x100 -gravity center caption:'#{nombre_of t.name}' #{t.name}
+  convert -background none -font '/Library/Fonts/ヒラギノ丸ゴ ProN W4.otf' -size 300x80 -gravity center caption:'#{nombre_of t.name}' #{t.name}
   _EOS
 end
 
@@ -166,8 +166,8 @@ rule(/^build\/p\d+\.png$/ => [
     #{t.sources[3]} -geometry +284+371 -composite \
     #{composite_right_title} \
     #{t.sources[1]} -geometry +484+270 -composite \
-    #{t.sources[4]} -gravity South -geometry +0+170 -composite \
     -resize 3390x -crop 3390x4724+0+10 \
+    #{t.sources[4]} -gravity South -geometry +0+120 -composite \
     #{t.name}
   _EOS
 end
