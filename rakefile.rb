@@ -11,16 +11,29 @@ task :pdf do |t|
   sh 'convert -page a5 -define pdf:page-direction=right-to-left build/p*.png build/pages.pdf'
 end
 
+def special_pages
+  @special_pages ||= FileList.new('src/page*.png')
+end
+
+def special_page_nombres
+  @special_page_nombres ||= special_pages.collect {|page| page.match(/\d+/).to_a[0].to_i }
+end
+
 def nombre_of(page)
   page.match(/(\d+)\.png$/).to_a[1].to_i
 end
 
+def virtual_nombre_of(page)
+  nombre = nombre_of page
+  nombre - special_page_nombres.count {|n| n < nombre }
+end
+
 def episode_number_of(page)
-  (nombre_of(page) - 1) / 4 + 1
+  (virtual_nombre_of(page) - 1) / 4 + 1
 end
 
 def right_strip_number_of(page)
-  (nombre_of(page) * 2 - 2) % 8
+  (virtual_nombre_of(page) * 2 - 2) % 8
 end
 
 def left_strip_number_of(page)
@@ -121,6 +134,12 @@ rule(/nombres\/.*\.png$/ => ['nombres']) do |t|
 end
 
 directory 'build'
+
+special_pages.each do |src|
+  file ('build/p%03d.png' % nombre_of(src)) => [src] do |t|
+    sh "cp -p #{src} #{t}"
+  end
+end
 
 rule(/^build\/p\d+\.png$/ => [
   proc {|page| t1_name_of page },
