@@ -138,13 +138,11 @@ end
 
 directory 'build'
 
-CONVERT_RESIZE = "-resize #{3295 + 118 * 2}x -crop 3295x4724+0+130"
-
 special_pages.each do |src|
   file ('build/p%03d.png' % nombre_of(src)) => [nombre_name_of(src), src] do |t|
     sh <<-_EOS
     convert #{src} \
-      #{CONVERT_RESIZE} \
+      -gravity South \
       #{t.name}
     _EOS
   end
@@ -169,7 +167,6 @@ rule(/^build\/p\d+\.png$/ => [
     #{composite_right_title} \
     #{t.sources[1]} -geometry +484+210 -composite \
     #{t.sources[4]} -gravity South -geometry +3+300 -composite \
-    #{CONVERT_RESIZE} \
     #{t.name}
   _EOS
 end
