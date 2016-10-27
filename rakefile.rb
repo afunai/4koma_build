@@ -7,7 +7,7 @@ CLOBBER.include FileList.new('build/*')
 
 task default: :all
 
-multitask :all => (ENV['p'] || 18).to_i.times.collect {|i| 'build/p%03d.png' % (i + 1)}
+multitask :all => (ENV['p'] || 8).to_i.times.collect {|i| 'build/p%03d.png' % (i + 1)}
 
 task :pdf do |t|
   sh 'convert -page a5 -define pdf:page-direction=right-to-left build/p*.png build/pages.pdf'
