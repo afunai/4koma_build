@@ -130,8 +130,9 @@ end
 directory 'nombres'
 
 rule(/nombres\/.*\.png$/ => ['nombres']) do |t|
+  nombre_gravity = nombre_of(t.name) % 2 == 0 ? 'East' : 'West'
   sh <<-_EOS
-  convert -background none -font '/Library/Fonts/ヒラギノ丸ゴ ProN W4.otf' -size 300x80 -gravity center caption:'#{nombre_of t.name}' #{t.name}
+  convert -background none -font '/Library/Fonts/ヒラギノ丸ゴ ProN W4.otf' -size 3542x80 -gravity #{nombre_gravity} caption:'#{nombre_of t.name}' #{t.name}
   _EOS
 end
 
@@ -167,7 +168,7 @@ rule(/^build\/p\d+\.png$/ => [
     #{t.sources[3]} -geometry +284+311 -composite \
     #{composite_right_title} \
     #{t.sources[1]} -geometry +484+210 -composite \
-    #{t.sources[4]} -gravity South -geometry +0+180 -composite \
+    #{t.sources[4]} -gravity South -geometry +3+300 -composite \
     #{CONVERT_RESIZE} \
     #{t.name}
   _EOS
