@@ -3,11 +3,15 @@ require 'rake/clean'
 CLEAN.include FileList.new('titles/t_*.txt')
 CLEAN.include FileList.new('titles/t_*.png')
 CLEAN.include FileList.new('nombres/n_*.png')
+CLEAN.include FileList.new('tmp/*')
 CLOBBER.include FileList.new('build/*')
+CLOBBER.include FileList.new('build_a5/*')
 
 task default: :all
 
 multitask :all => (ENV['p'] || 8).to_i.times.collect {|i| 'build/p%03d.png' % (i + 1)}
+
+multitask :a5  => (ENV['p'] || 8).to_i.times.collect {|i| 'build_a5/p%03d.png' % (i + 1)}
 
 task :pdf do |t|
   sh 'convert -page a5 -define pdf:page-direction=right-to-left build/p*.png build/pages.pdf'
@@ -77,6 +81,13 @@ end
 def nombre_name_of(page)
   sprintf(
     'nombres/n_%03d.png',
+    nombre_of(page),
+  )
+end
+
+def build_name_of(page)
+  sprintf(
+    'build/p%03d.png',
     nombre_of(page),
   )
 end
@@ -168,6 +179,27 @@ rule(/^build\/p\d+\.png$/ => [
     #{t.sources[1]} -geometry +484+210 -composite \
     #{t.sources[4]} -gravity South -geometry +3+300 -composite \
     #{t.name}
+  _EOS
+end
+
+directory 'build_a5'
+directory 'tmp/build_a5'
+
+CONVERT_RESIZE = "-gravity South -resize #{3295 + 118 * 2}x -crop #{3295 - 118}x4724+0+130"
+
+rule(/^build_a5\/p\d+\.png$/ => [
+  proc {|page| build_name_of page },
+  'build_a5',
+  'tmp/build_a5',
+]) do |t|
+  sh <<-_EOS
+  convert #{t.sources[0]} -fill white +opaque '#000000' #{CONVERT_RESIZE} -monochrome -negate tmp/#{t.name}.lines.png
+  _EOS
+  sh <<-_EOS
+  convert #{t.sources[0]} -fill white -opaque '#000000' #{CONVERT_RESIZE} -ordered-dither h8x8o tmp/#{t.name}.tones.png
+  _EOS
+  sh <<-_EOS
+  composite tmp/#{t.name}.tones.png -compose Multiply tmp/#{t.name}.lines.png #{t.name}
   _EOS
 end
 
