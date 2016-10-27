@@ -7,12 +7,7 @@ CLOBBER.include FileList.new('build/*')
 
 task default: :all
 
-task :all, [:last_page] do |t, args|
-  args.with_defaults(:last_page => 1)
-  args.last_page.to_i.times do |i|
-    Rake::Task['build/p%03d.png' % (i + 1)].invoke
-  end
-end
+multitask :all => (ENV['p'] || 18).to_i.times.collect {|i| 'build/p%03d.png' % (i + 1)}
 
 task :pdf do |t|
   sh 'convert -page a5 -define pdf:page-direction=right-to-left build/p*.png build/pages.pdf'
