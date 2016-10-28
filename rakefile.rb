@@ -156,7 +156,7 @@ directory 'nombres'
 rule(/nombres\/.*\.png$/ => ['nombres']) do |t|
   nombre_gravity = nombre_of(t.name) % 2 == 0 ? 'East' : 'West'
   sh <<-_EOS
-  convert -background none -font '/Library/Fonts/ヒラギノ丸ゴ ProN W4.otf' -size 3542x80 -gravity #{nombre_gravity} +antialias caption:'#{nombre_of t.name}' #{t.name}
+  convert -background none -font '/Library/Fonts/ヒラギノ丸ゴ ProN W4.otf' -size 3561x80 -gravity #{nombre_gravity} +antialias caption:'#{nombre_of t.name}' #{t.name}
   _EOS
 end
 
@@ -183,19 +183,18 @@ rule(/^build\/p\d+\.png$/ => [
 ]) do |t|
   composite_right_title = right_strip_number_of(t.name) == 0 ?
     '' :
-    "#{t.sources[0]} -geometry +2339+210 -composite"
+    "#{t.sources[0]} -geometry +2350+210 -composite"
   sh <<-_EOS
   convert src/base.png \
-    #{t.sources[2]} -geometry +2139+311 -composite \
-    #{t.sources[3]} -geometry +284+311 -composite \
+    #{t.sources[2]} -geometry +2150+311 -composite \
+    #{t.sources[3]} -geometry +270+311 -composite \
     #{composite_right_title} \
-    #{t.sources[1]} -geometry +484+210 -composite \
+    #{t.sources[1]} -geometry +470+210 -composite \
     #{t.sources[4]} -gravity South -geometry +3+300 -composite \
     #{t.name}
   _EOS
 end
 
-directory 'build_a5'
 directory 'tmp/build_a5'
 
 CONVERT_RESIZE = "-gravity South -resize #{3295 + 118 * 2}x -crop #{3295 - 118}x4724+0+130"
