@@ -205,10 +205,20 @@ rule(/^build_a5\/p\d+\.png$/ => [
   'tmp/build_a5',
 ]) do |t|
   sh <<-_EOS
-  convert #{t.sources[0]} -fill white -fuzz 0.5% +opaque '#000000' #{CONVERT_RESIZE} -monochrome -negate tmp/#{t.name}.lines.png
+  convert #{t.sources[0]} -fill white -fuzz 0% +opaque '#000000' tmp/#{t.name}.lines_b5.png
   _EOS
   sh <<-_EOS
-  convert #{t.sources[0]} -fill white -fuzz 0% -opaque '#000000' #{CONVERT_RESIZE} -ordered-dither h8x8a tmp/#{t.name}.tones.png
+  convert #{t.sources[0]} -blur 1x8 -fill white -fuzz 7% +opaque '#000001' -fuzz 0% -opaque '#000000' -monochrome tmp/#{t.name}.tones_b5_mask.png
+  _EOS
+  sh <<-_EOS
+  convert tmp/#{t.name}.lines_b5.png -compose Lighten tmp/#{t.name}.tones_b5_mask.png -composite -negate tmp/#{t.name}.lines_b5_mask.png
+  _EOS
+
+  sh <<-_EOS
+  convert #{t.sources[0]} -fill white -fuzz 1% +opaque '#000000' #{CONVERT_RESIZE} -monochrome -negate tmp/#{t.name}.lines.png
+  _EOS
+  sh <<-_EOS
+  convert #{t.sources[0]} -compose Lighten tmp/#{t.name}.lines_b5_mask.png -composite #{CONVERT_RESIZE} -ordered-dither h8x8a tmp/#{t.name}.tones.png
   _EOS
   sh <<-_EOS
   composite tmp/#{t.name}.tones.png -compose Multiply tmp/#{t.name}.lines.png #{t.name}
