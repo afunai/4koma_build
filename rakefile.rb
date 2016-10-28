@@ -205,10 +205,10 @@ rule(/^build_a5\/p\d+\.png$/ => [
   'tmp/build_a5',
 ]) do |t|
   sh <<-_EOS
-  convert #{t.sources[0]} -fill white +opaque '#000000' #{CONVERT_RESIZE} -monochrome -negate tmp/#{t.name}.lines.png
+  convert #{t.sources[0]} -fill white -fuzz 0.5% +opaque '#000000' #{CONVERT_RESIZE} -monochrome -negate tmp/#{t.name}.lines.png
   _EOS
   sh <<-_EOS
-  convert #{t.sources[0]} -fill white -opaque '#000000' #{CONVERT_RESIZE} -ordered-dither h8x8o tmp/#{t.name}.tones.png
+  convert #{t.sources[0]} -fill white -fuzz 0% -opaque '#000000' #{CONVERT_RESIZE} -ordered-dither h8x8a tmp/#{t.name}.tones.png
   _EOS
   sh <<-_EOS
   composite tmp/#{t.name}.tones.png -compose Multiply tmp/#{t.name}.lines.png #{t.name}
