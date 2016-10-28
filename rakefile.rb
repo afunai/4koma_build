@@ -7,11 +7,17 @@ CLEAN.include FileList.new('tmp/*')
 CLOBBER.include FileList.new('build/*')
 CLOBBER.include FileList.new('build_a5/*')
 
+def page_range
+  head, tail = (ENV['p'] || '1-8').split(/\-/)
+  tail ||= head
+  (head.to_i .. tail.to_i)
+end
+
 task default: :all
 
-multitask :all => (ENV['p'] || 8).to_i.times.collect {|i| 'build/p%03d.png' % (i + 1)}
+multitask :all => page_range.collect {|i| 'build/p%03d.png' % i}
 
-multitask :a5  => (ENV['p'] || 8).to_i.times.collect {|i| 'build_a5/p%03d.png' % (i + 1)}
+multitask :a5  => page_range.collect {|i| 'build_a5/p%03d.png' % i}
 
 task :pdf do |t|
   sh 'convert -page a5 -define pdf:page-direction=right-to-left build/p*.png build/pages.pdf'
