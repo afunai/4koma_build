@@ -29,6 +29,24 @@ task :a5pdf => :a5 do |t|
   sh "convert -page a5 -extent 3390x4724 -define pdf:page-direction=right-to-left #{files} build_a5/pages_#{range}.pdf"
 end
 
+task :a5book => :a5 do |t|
+  head = page_range.first
+  tail = page_range.last
+  book = []
+  while head < tail do
+    head_page = "build_a5/p#{sprintf('%03d', head)}.png"
+    tail_page = "build_a5/p#{sprintf('%03d', tail)}.png"
+    pages     = head % 2 == 0 ? "#{tail_page} #{head_page}" : "#{head_page} #{tail_page}"
+    tmp_img   = "tmp/p#{sprintf('%03d_%03d', head, tail)}.png"
+    sh "convert +append #{pages} #{tmp_img}.t"
+    sh "convert #{tmp_img}.t -rotate #{head % 2 == 0 ? 270 : 90} #{tmp_img}"
+    book << tmp_img
+    head += 1
+    tail -= 1
+  end
+  sh "convert #{book.join ' '} -page a4 -density 72 -extent 4724x6780 build_a5/book#{sprintf('%03d_%03d', page_range.first, page_range.last)}.pdf"
+end
+
 def special_pages
   @special_pages ||= FileList.new('src/page*.png')
 end
