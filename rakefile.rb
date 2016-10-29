@@ -211,7 +211,6 @@ CONVERT_DITHER = '-ordered-dither h60lines'
 
 rule(/^build_a5\/p\d+\.png$/ => [
   proc {|page| build_name_of page },
-  'build_a5',
   'tmp/build_a5',
   "#{ENV['HOME']}/.config/ImageMagick/thresholds.xml",
 ]) do |t|
