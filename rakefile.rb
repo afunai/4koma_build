@@ -195,15 +195,25 @@ rule(/^build\/p\d+\.png$/ => [
   _EOS
 end
 
+directory "#{ENV['HOME']}/.config/ImageMagick"
+
+file "#{ENV['HOME']}/.config/ImageMagick/thresholds.xml" => ['dither/thresholds.xml', "#{ENV['HOME']}/.config/ImageMagick"] do |t|
+  sh <<-_EOS
+  mv ~/.config/ImageMagick/thresholds.xml ~/.config/ImageMagick/thresholds.xml~;
+  cp -p dither/thresholds.xml ~/.config/ImageMagick/;
+  _EOS
+end
+
 directory 'tmp/build_a5'
 
 CONVERT_RESIZE = "-gravity South -resize #{3295 + 118 * 2}x -crop #{3295 - 118}x4724+0+130"
-CONVERT_DITHER = '-ordered-dither h20x20a'
+CONVERT_DITHER = '-ordered-dither h60lines'
 
 rule(/^build_a5\/p\d+\.png$/ => [
   proc {|page| build_name_of page },
   'build_a5',
   'tmp/build_a5',
+  "#{ENV['HOME']}/.config/ImageMagick/thresholds.xml",
 ]) do |t|
   sh <<-_EOS
   convert \
