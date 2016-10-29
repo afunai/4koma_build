@@ -206,7 +206,7 @@ rule(/^build_a5\/p\d+\.png$/ => [
 ]) do |t|
   sh <<-_EOS
   convert \
-    #{t.sources[0]} -blur 1x8 -fill white -fuzz 7% +opaque '#000001' -fuzz 0% -opaque '#000000' -monochrome \
+    #{t.sources[0]} -fill white -fuzz 30% +opaque '#010101' -fuzz 0% -opaque '#000000' -morphology Erode Diamond:3 -threshold 50% -negate \
     tmp/#{t.name}.tones_b5_mask.png;
   convert \
     #{t.sources[0]} -fill white -fuzz 0% +opaque '#000000' \
