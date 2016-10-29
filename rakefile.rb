@@ -26,8 +26,7 @@ end
 task :a5pdf => :a5 do |t|
   files = page_range.collect {|i| 'build_a5/p%03d.png' % i}.join ' '
   range = ('%03d' % page_range.first) + '-' + ('%03d' % page_range.last)
-  sh "convert -page a5+9+0 -define pdf:page-direction=right-to-left #{files} build_a5/pages_centered_#{range}.pdf"
-  sh "convert -page a5 -define pdf:page-direction=right-to-left #{files} build_a5/pages_#{range}.pdf"
+  sh "convert -page a5 -extent 3390x4724 -define pdf:page-direction=right-to-left #{files} build_a5/pages_#{range}.pdf"
 end
 
 def special_pages
