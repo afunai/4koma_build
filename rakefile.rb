@@ -198,6 +198,7 @@ end
 directory 'tmp/build_a5'
 
 CONVERT_RESIZE = "-gravity South -resize #{3295 + 118 * 2}x -crop #{3295 - 118}x4724+0+130"
+CONVERT_DITHER = '-ordered-dither h20x20a'
 
 rule(/^build_a5\/p\d+\.png$/ => [
   proc {|page| build_name_of page },
@@ -219,11 +220,13 @@ rule(/^build_a5\/p\d+\.png$/ => [
     -compose Lighten \
     tmp/#{t.name}.lines_b5_mask.png -composite \
     #{CONVERT_RESIZE} \
-    -ordered-dither h8x8a \
+    #{CONVERT_DITHER} \
     tmp/#{t.name}.tones.png;
-
-  convert #{t.sources[0]} -fill white -fuzz 1% +opaque '#000000' #{CONVERT_RESIZE} -monochrome -negate tmp/#{t.name}.lines.png;
-
+  _EOS
+  sh <<-_EOS
+  convert #{t.sources[0]} -fill white -fuzz 0.5% +opaque '#000000' #{CONVERT_RESIZE} -monochrome -negate tmp/#{t.name}.lines.png;
+  _EOS
+  sh <<-_EOS
   composite \
     tmp/#{t.name}.tones.png \
     -compose Darken \
