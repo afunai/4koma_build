@@ -8,9 +8,12 @@ CLOBBER.include FileList.new('build/*')
 CLOBBER.include FileList.new('build_a5/*')
 
 def page_range
-  head, tail = (ENV['p'] || '1-8').split(/\-/)
-  tail ||= head
-  (head.to_i .. tail.to_i)
+  unless @page_range
+    head, tail = (ENV['p'] || '1-8').split(/\-/)
+    tail ||= head
+    @page_range = (head.to_i .. tail.to_i)
+  end
+  @page_range
 end
 
 task default: :all
