@@ -32,13 +32,17 @@ task :a5pdf => :a5 do |t|
   sh "convert -page a5 -extent 3390x4724 -define pdf:page-direction=right-to-left #{files} build_a5/pages_#{range}.pdf"
 end
 
-task :a5book => :a5 do |t|
+directory 'tmp'
+
+task :a5book => [:a5, 'tmp/blank_page.png'] do |t|
   head = page_range.first
+  head -= 1 if head % 2 == 0
   tail = page_range.last
+  tail += 3 - (tail - head) % 4
   book = []
   while head < tail do
-    head_page = "build_a5/p#{sprintf('%03d', head)}.png"
-    tail_page = "build_a5/p#{sprintf('%03d', tail)}.png"
+    head_page = (head < page_range.first || head > page_range.last) ? 'tmp/blank_page.png' : "build_a5/p#{sprintf('%03d', head)}.png"
+    tail_page = tail > page_range.last  ? 'tmp/blank_page.png' : "build_a5/p#{sprintf('%03d', tail)}.png"
     pages     = head % 2 == 0 ? "#{tail_page} #{head_page}" : "#{head_page} #{tail_page}"
     tmp_img   = "tmp/p#{sprintf('%03d_%03d', head, tail)}.png"
     sh "convert +append #{pages} #{tmp_img}.t"
@@ -47,7 +51,16 @@ task :a5book => :a5 do |t|
     head += 1
     tail -= 1
   end
-  sh "convert #{book.join ' '} -page a4 -density 72 -extent 4724x6780 build_a5/book#{sprintf('%03d_%03d', page_range.first, page_range.last)}.pdf"
+  sh <<-_EOS
+  convert -page a4 -density 72 -extent 4724x6780 #{book.join ' '} \
+  build_a5/book#{sprintf('%03d_%03d', page_range.first, page_range.last)}.pdf
+  _EOS
+end
+
+file 'tmp/blank_page.png' =>['tmp'] do |t|
+  sh <<-_EOS
+  convert -size 3390x4724 xc:white #{t.name}
+  _EOS
 end
 
 def special_pages
