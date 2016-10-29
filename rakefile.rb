@@ -206,8 +206,8 @@ end
 
 directory 'tmp/build_a5'
 
-CONVERT_RESIZE = "-gravity South -resize #{3295 + 118 * 2}x -crop #{3295 - 118}x4724+0+130"
 CONVERT_DITHER = '-ordered-dither h60lines'
+CONVERT_RESIZE = "-gravity Center -resize #{3295 + 118 * 2}x -crop 3390x4724+0+0"
 
 rule(/^build_a5\/p\d+\.png$/ => [
   proc {|page| build_name_of page },
