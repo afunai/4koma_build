@@ -46,7 +46,7 @@ task :a5book => [:a5, 'tmp/blank_page.png', 'tmp/spacer.png'] do |t|
     pages     = head % 2 == 0 ? "#{tail_page} tmp/spacer.png #{head_page}" : "#{head_page} tmp/spacer.png #{tail_page}"
     tmp_img   = "tmp/p#{sprintf('%03d_%03d', head, tail)}.png"
     sh "convert +append #{pages} #{tmp_img}.t"
-    sh "convert -density 600 -size 7016x4961 xc:blue #{tmp_img}.t -gravity center -composite -rotate #{head % 2 == 0 ? 270 : 90} -threshold 50% #{tmp_img}"
+    sh "convert -density 600 -size 7016x4961 xc:white #{tmp_img}.t -gravity center -composite -rotate #{head % 2 == 0 ? 270 : 90} #{tmp_img}"
     book << tmp_img
     head += 1
     tail -= 1
