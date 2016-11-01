@@ -52,7 +52,7 @@ task :a5book => [:a5, 'tmp/blank_page.png', 'tmp/spacer.png'] do |t|
     tail -= 1
   end
   sh <<-_EOS
-  convert -density 600 -extent 4961x7016 #{book.join ' '} \
+  convert -density 600 -gravity center -extent 4961x7016 #{book.join ' '} \
   build_a5/book#{sprintf('%03d_%03d', page_range.first, page_range.last)}.pdf
   _EOS
 end
